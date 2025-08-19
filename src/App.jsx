@@ -1,75 +1,127 @@
-import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useEffect, useReducer } from "react";
 import "./App.css";
 import Advice from "./components/Advice";
 import Editor from "./components/Editor";
 import Header from "./components/Header";
 import List from "./components/List";
 
-const mok = [
-  {
-    id: uuidv4(),
-    isDone: false,
-    content: "작은봄 연습하기",
-    date: new Date().getTime(),
-  },
-  {
-    id: uuidv4(),
-    isDone: false,
-    content: "샤워하기",
-    date: new Date().getTime(),
-  },
-  {
-    id: uuidv4(),
-    isDone: false,
-    content: "드럼 연습하기",
-    date: new Date().getTime(),
-  },
-];
+// const mok = [
+//   {
+//     id: uuidv4(),
+//     isDone: false,
+//     content: "작은봄 연습하기",
+//     date: new Date().getTime(),
+//   },
+//   {
+//     id: uuidv4(),
+//     isDone: false,
+//     content: "샤워하기",
+//     date: new Date().getTime(),
+//   },
+//   {
+//     id: uuidv4(),
+//     isDone: false,
+//     content: "드럼 연습하기",
+//     date: new Date().getTime(),
+//   },
+// ];
 
+//reducer함수 만들기 (todo의 상태 변화를 담당)
+function reducer(state, action) {
+  switch (action.type) {
+    case "INIT": {
+      return action.data;
+    }
+    case "CREATE": {
+      //새로운 할일을 추가하면, 기존의 데이터와 스프레드배열로 state상태값으로 함께 조인
+      return [action.data, ...state];
+    }
+    //UPDATE = 할일 토글 체크
+    case "UPDATE": {
+      return state.map((item) =>
+        item.id === action.targetId ? { ...item, isDone: !item.isDone } : item
+      );
+    }
+    case "DELETE": {
+      return state.filter((item) => item.id !== action.targetId);
+    }
+    case "EDIT": {
+      return state.map((item) =>
+        item.id === action.targetId
+          ? { ...item, content: action.newContent }
+          : item
+      );
+    }
+    //MORE_CONTENT = 할일 내용 더보기
+    case "MORE_CONTENT": {
+      return state.map((item) =>
+        item.id === action.id ? { ...item, isExpanded: !item.isExpanded } : item
+      );
+    }
+    default: {
+      return state;
+    }
+  }
+}
 function App() {
-  const [todo, setTodo] = useState(mok);
+  const [todo, dispatch] = useReducer(reducer, []);
+  //초기값 서버에서 데이터 받아서 랜더링
+  useEffect(() => {
+    fetch("http://localhost:3000/todos")
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch({ type: "INIT", data });
+      });
+  }, []);
+
   const onCreate = (content) => {
-    const newTodo = {
-      //json서버 파일을 보낼때, ID값은 자동으로 만들어줌
-      isDone: false,
-      content: content,
-      date: new Date().getTime(),
-    };
-    //서버로 보내주기
-    fetch("http://localhost:3000/todo", {
+    fetch("http://localhost:3000/todos", {
       method: "POST",
-      body: JSON.stringify(newTodo),
+      body: JSON.stringify({
+        content: content,
+        isDone: false,
+        date: new Date(),
+      }),
+      headers: { "Content-Type": "application/json" },
     })
       .then((res) => res.json())
-      .then((res) => setTodo([...todo, res]));
+      .then((data) => dispatch({ type: "CREATE", data }));
   };
 
   //체크 박스 선택하면 토글 해주는 메서드
   const onUpdate = (targetId) => {
-    //체크박스가 선택된 아이디 값 받아와서, todo의 상태값과 동일한 Id를 갖는다?
-    //그럼 todo의 상태 변화 시켜
-    setTodo(
-      todo.map((todos) =>
-        todos.id === targetId ? { ...todos, isDone: !todos.isDone } : todos
-      )
-    );
+    dispatch({
+      type: "UPDATE",
+      targetId: targetId,
+    });
   };
 
   //삭제하는 로직
   const onDelete = (targetId) => {
-    setTodo(todo.filter((todos) => todos.id !== targetId));
+    fetch(`http://localhost:3000/todos/${encodeURIComponent(targetId)}`, {
+      method: "DELETE", // 기존 데이터 수정
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      if (!res.ok) throw new Error("삭제실패");
+      dispatch({ type: "DELETE", targetId }).catch((err) => console.log(err));
+    });
   };
 
   //수정버튼 기능
   const onEdit = (targetId, newContent) => {
-    setTodo(
-      todo.map((todos) =>
-        todos.id === targetId ? { ...todos, content: newContent } : todos
-      )
-    );
+    fetch(`http://localhost:3000/todos/${encodeURIComponent(targetId)}`, {
+      method: "PATCH", // 기존 데이터 수정
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: newContent }),
+    })
+      .then((res) => res.json())
+      .then(() => dispatch({ type: "EDIT", targetId, newContent }));
   };
 
+  //더보기 기능
+  const onToggleExpand = (targetId) => {
+    dispatch({ type: "MORE_CONTENT", id: targetId });
+  };
   return (
     <div className="APP">
       <h1>TODO-LIST APP</h1>
@@ -81,6 +133,7 @@ function App() {
         onUpdate={onUpdate}
         onDelete={onDelete}
         onEdit={onEdit}
+        onToggleExpand={onToggleExpand}
       ></List>
     </div>
   );
