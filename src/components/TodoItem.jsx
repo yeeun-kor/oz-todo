@@ -29,6 +29,12 @@ export default function TodoItem({
     onEdit(id, editContent);
     setIsEditing(false);
   };
+
+  //(토글)버튼 클릭시, 컨텐츠 내용 더 보여주고 닫아주기
+  const onChageMoreContent = () => {
+    onToggleExpand(id);
+    setIsExpanded(!isExpanded);
+  };
   return (
     <div className={`TodoItem ${isDone === false ? "isNotDone" : "isDone"}`}>
       <input
@@ -60,10 +66,7 @@ export default function TodoItem({
         <>
           <div
             className={`content ${isExpanded ? "expanded" : ""}`}
-            onClick={() => {
-              onToggleExpand(id);
-              setIsExpanded(!isExpanded);
-            }}
+            onClick={onChageMoreContent}
           >
             {content}
           </div>
