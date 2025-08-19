@@ -67,6 +67,7 @@ function App() {
   const [todo, dispatch] = useReducer(reducer, []);
   //초기값 서버에서 데이터 받아서 랜더링
   useEffect(() => {
+    // todo와 관련된 api들을 모아서 정리해보면 좋을 것 같습니다. 
     fetch("http://localhost:3000/todos")
       .then((res) => res.json())
       .then((data) => {
