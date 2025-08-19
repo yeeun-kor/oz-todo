@@ -1,31 +1,30 @@
 import { useEffect, useReducer } from "react";
-import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 import Advice from "./components/Advice";
 import Editor from "./components/Editor";
 import Header from "./components/Header";
 import List from "./components/List";
 
-const mok = [
-  {
-    id: uuidv4(),
-    isDone: false,
-    content: "작은봄 연습하기",
-    date: new Date().getTime(),
-  },
-  {
-    id: uuidv4(),
-    isDone: false,
-    content: "샤워하기",
-    date: new Date().getTime(),
-  },
-  {
-    id: uuidv4(),
-    isDone: false,
-    content: "드럼 연습하기",
-    date: new Date().getTime(),
-  },
-];
+// const mok = [
+//   {
+//     id: uuidv4(),
+//     isDone: false,
+//     content: "작은봄 연습하기",
+//     date: new Date().getTime(),
+//   },
+//   {
+//     id: uuidv4(),
+//     isDone: false,
+//     content: "샤워하기",
+//     date: new Date().getTime(),
+//   },
+//   {
+//     id: uuidv4(),
+//     isDone: false,
+//     content: "드럼 연습하기",
+//     date: new Date().getTime(),
+//   },
+// ];
 
 //reducer함수 만들기 (todo의 상태 변화를 담당)
 function reducer(state, action) {
@@ -58,7 +57,8 @@ function reducer(state, action) {
   }
 }
 function App() {
-  const [todo, dispatch] = useReducer(reducer, mok);
+  const [todo, dispatch] = useReducer(reducer, []);
+  //초기값 서버에서 데이터 받아서 랜더링
   useEffect(() => {
     fetch("http://localhost:3000/todos")
       .then((res) => res.json())
@@ -66,16 +66,15 @@ function App() {
         dispatch({ type: "INIT", data });
       });
   }, []);
+
   const onCreate = (content) => {
-    const newTodo = {
-      id: uuidv4(),
-      isDone: false,
-      content: content,
-      date: new Date().getTime(),
-    };
-    fetch("http://localhost:3000/todo", {
+    fetch("http://localhost:3000/todos", {
       method: "POST",
-      body: JSON.stringify(newTodo),
+      body: JSON.stringify({
+        content: content,
+        isDone: false,
+        date: new Date(),
+      }),
       headers: { "Content-Type": "application/json" },
     })
       .then((res) => res.json())
