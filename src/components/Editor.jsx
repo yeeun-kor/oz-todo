@@ -7,6 +7,7 @@ export default function Editor({ onCreate }) {
   const onChageContent = (e) => {
     setContent(e.target.value);
   };
+//   form 태그를 활용해 보시면 좋을 것 같습니다. keydown 이벤트가 없어도 됩니다.
   const onKeyDown = (e) => {
     if (e.keyCode === 13) {
       onSubmit();
