@@ -8,6 +8,7 @@ export default function TodoItem({
   onUpdate,
   onDelete,
   onEdit,
+  onToggleExpand,
 }) {
   //체크박스 토글 기능
   const onChageCheckBox = () => {
@@ -16,10 +17,13 @@ export default function TodoItem({
 
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(content);
+  //컨텐츠 더보기 보이는지 아닌지 상태
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const onChageContent = () => {
     setEditContent(content); // 기존 내용 불러오기
     setIsEditing(true);
+    setIsExpanded(true);
   };
   const handleComplete = () => {
     onEdit(id, editContent);
@@ -47,14 +51,22 @@ export default function TodoItem({
           <input
             type="text"
             value={editContent}
-            className="content"
+            className="editInput"
             onChange={(e) => setEditContent(e.target.value)}
           />
           <button onClick={handleComplete}>완료</button>
         </>
       ) : (
         <>
-          <div className="content">{content}</div>
+          <div
+            className={`content ${isExpanded ? "expanded" : ""}`}
+            onClick={() => {
+              onToggleExpand(id);
+              setIsExpanded(!isExpanded);
+            }}
+          >
+            {content}
+          </div>
           <button className="TodoItem-update" onClick={onChageContent}>
             수정
           </button>

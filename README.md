@@ -1,42 +1,23 @@
 # **📝 Todo List (Mini Project)**
 
-## **📌 프로젝트 소개**
+## **📌 더보기 기능 구현**
 
-React 학습을 종합하여 구현한 개인 프로젝트입니다.
+### 1. 상태 추가
 
-단순한 CRUD를 넘어 **시간 표시, 랜덤 명언, Custom Hook, json-server** 등을 적용하며
+    - todo의 content가 길어지면 CSS에서 overflow: hidden 으로 잘라내고 있음
+    - 그런데 사용자가 특정 todo 아이템을 클릭하면 숨겨진 나머지 텍스트까지 보이게 하고 싶음
+    - 느낌상 “더보기 / 접기” 토글 기능
 
-프론트엔드 기본기를 강화하는 것을 목표로 했습니다.
+#### 접근 방법
 
-## **📸 실행 화면**
+---
 
-(완성 후 스크린샷 또는 GIF 삽입 예정)
+1. UI상태 관리해주기.
 
-## **🛠️ 사용 기술 (Tech Stack)**
+2. `isExpanded` 상태 변수 하나 만들어서, 각 todo 아이템 별로 추가
 
-- **Frontend** : React, JavaScript, CSS
-- **Backend(Mock)** : json-server
-- **Build Tool** : Vite
-- **Etc.** : Git, GitHub
+   - 확장되어 있는지, 펼쳐져 있는지 의미함
+   - `isExpanded : false `펼쳐있지 않고 닫혀져 있음
+   - `isExpanded : true` 펼쳐져 있음
 
-## **🚀 주요 기능**
-
-- ✅ Todo 생성 / 조회 / 수정 / 삭제 (**CRUD**)
-- 🕒 현재 시간 표시 기능
-- ✨ 랜덤 명언 컴포넌트
-- 🎣 Custom Hook 활용
-- 💾 json-server를 이용한 데이터 관리
-
-## 기능구현
-
-### 1️⃣ Todo 생성
-
-### 2️⃣ Todo 조회
-
-### 3️⃣ Todo 수정
-
-### 4️⃣ Todo 삭제
-
-### 5️⃣ 현재 시간 표시
-
-### 6️⃣ 랜덤 명언 표시
+3. `isExpanded : true` 이면 펼쳐지는 CSS 스타일링

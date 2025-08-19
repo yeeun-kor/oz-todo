@@ -1,7 +1,13 @@
 import { useState } from "react";
 import "./list.css";
 import TodoItem from "./TodoItem";
-export default function List({ todo, onUpdate, onDelete, onEdit }) {
+export default function List({
+  todo,
+  onUpdate,
+  onDelete,
+  onEdit,
+  onToggleExpand,
+}) {
   const [search, setSearch] = useState("");
   const onChageSearch = (e) => {
     setSearch(e.target.value);
@@ -33,6 +39,7 @@ export default function List({ todo, onUpdate, onDelete, onEdit }) {
               key={todos.id}
               onUpdate={onUpdate}
               onDelete={onDelete}
+              onToggleExpand={onToggleExpand}
               onEdit={onEdit}
             ></TodoItem>
           );

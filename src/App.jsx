@@ -36,6 +36,7 @@ function reducer(state, action) {
       //새로운 할일을 추가하면, 기존의 데이터와 스프레드배열로 state상태값으로 함께 조인
       return [action.data, ...state];
     }
+    //UPDATE = 할일 토글 체크
     case "UPDATE": {
       return state.map((item) =>
         item.id === action.targetId ? { ...item, isDone: !item.isDone } : item
@@ -49,6 +50,12 @@ function reducer(state, action) {
         item.id === action.targetId
           ? { ...item, content: action.newContent }
           : item
+      );
+    }
+    //MORE_CONTENT = 할일 내용 더보기
+    case "MORE_CONTENT": {
+      return state.map((item) =>
+        item.id === action.id ? { ...item, isExpanded: !item.isExpanded } : item
       );
     }
     default: {
@@ -111,6 +118,10 @@ function App() {
       .then(() => dispatch({ type: "EDIT", targetId, newContent }));
   };
 
+  //더보기 기능
+  const onToggleExpand = (targetId) => {
+    dispatch({ type: "MORE_CONTENT", id: targetId });
+  };
   return (
     <div className="APP">
       <h1>TODO-LIST APP</h1>
@@ -122,6 +133,7 @@ function App() {
         onUpdate={onUpdate}
         onDelete={onDelete}
         onEdit={onEdit}
+        onToggleExpand={onToggleExpand}
       ></List>
     </div>
   );
