@@ -92,7 +92,13 @@ function App() {
 
   //삭제하는 로직
   const onDelete = (targetId) => {
-    dispatch({ type: "DELETE", targetId: targetId });
+    fetch(`http://localhost:3000/todos/${encodeURIComponent(targetId)}`, {
+      method: "DELETE", // 기존 데이터 수정
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      if (!res.ok) throw new Error("삭제실패");
+      dispatch({ type: "DELETE", targetId }).catch((err) => console.log(err));
+    });
   };
 
   //수정버튼 기능
