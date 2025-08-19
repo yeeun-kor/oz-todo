@@ -1,0 +1,41 @@
+.TodoItem {
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgb(220, 220, 220);
+}
+
+.TodoItem input {
+  width: 20px;
+}
+
+.TodoItem .content {
+  flex: 1;
+}
+.TodoItem .date {
+  font-size: 14px;
+  color: gray;
+}
+.TodoItem button {
+  cursor: pointer;
+  color: gray;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+}
+.isDone {
+  text-decoration: line-through;
+  color: gray;
+}
+.TodoItem .TodoItem-update {
+  background-color: rgb(248, 182, 255);
+  color: white;
+}
+.TodoItem .TodoItem-checkBox {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: solid 1px rgb(220, 220, 220);
+}

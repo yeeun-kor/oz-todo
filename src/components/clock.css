@@ -1,0 +1,21 @@
+.header-timer,
+.header-calender {
+  margin: 20px 0;
+  gap: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-timer-box,
+.header-calender-box {
+  background-color: rgba(0, 0, 0, 0.619);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 8px;
+  min-width: 20px;
+  text-align: center;
+}
+.colon {
+  margin: 0 0.3rem;
+}

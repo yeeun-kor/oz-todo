@@ -1,0 +1,28 @@
+.List {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  font-family: inherit;
+}
+
+.List input {
+  font-family: inherit;
+
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  padding: 15px 0;
+}
+
+/* focus되었을 때의 스타일 적용 */
+.List input:focus {
+  border-bottom: solid 1px rgb(226, 37, 255);
+  outline: none;
+}
+
+/* Task의 wrapper클래스 */
+.List .todos_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
